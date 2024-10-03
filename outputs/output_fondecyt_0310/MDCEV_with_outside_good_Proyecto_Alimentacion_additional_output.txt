@@ -1,0 +1,72 @@
+
+> # ----------------------------------------------------------------- #
+> #---- MODEL PREDICTIONS                                          ----
+> # -- .... [TRUNCATED] 
+Running predictions from model using parameter estimates...
+0%....50%....100%
+Aggregated predictions (continuous consumption, discrete choices, and expenditure) at user provided parameters
+                            cont_mean    cont_sd disc_mean disc_sd   expe_mean    expe_sd
+outside                   60703703.04 1187198.05   5601.00    0.00 60703703.04 1187198.05
+RefinedGrains              7093968.18  153322.59   5421.46   13.18 27179004.11  587422.32
+StarchyVegetables          3001945.00  130294.28   3322.00   36.76  4997083.34  216889.84
+Vegetables                 3312719.89  103051.14   4310.01   31.52  9134263.15  284146.04
+Fruits                     2982956.56   95390.19   4050.46   33.48  9380084.09  299960.12
+DairyFoods                  917952.00   30046.05   3966.97   34.02  8858181.11  289942.58
+Beef_and_lamb               464508.64   17696.43   2486.03   37.18  7339976.10  279631.78
+Pork                         94708.67    7900.29   1062.50   29.34  1231212.65  102703.76
+Chicken_and_other_poultry   805025.35   30690.58   3049.39   37.27  6440202.79  245524.62
+Eggs                        654555.32   30720.89   2734.30   37.41  4363702.12  204805.96
+Fish                         65294.75    5876.44    946.27   28.04  1005159.82   90463.11
+Legumes                     378399.02   24553.58   2602.30   37.32  1849614.41  120017.90
+Nuts                         84051.79    7490.02    878.68   27.22  1343421.74  119714.90
+SoyFoods                       109.56     135.21     87.10    9.26     1866.78    2303.71
+meatOther                   204027.82   12415.48   1955.97   35.68  2448333.86  148985.82
+AddedFats                   262209.33   15973.00   2182.68   36.50  1955806.28  119141.80
+AddedSugars                4982318.01  157175.35   4203.54   32.38  9886626.05  311889.75
+
+The output from apollo_prediction is a matrix containing the predictions at the estimated values.
+
+> #colMeans(predictions_base)
+> 
+> ######imagine aumenta los gastos en carne de vacuno por alza de impuestos------------------------------------------ .... [TRUNCATED] 
+
+> apollo_inputs = apollo_validateInputs()
+All checks on apollo_control completed.
+WARNING: Your database contains some entries that are NA. This may well be intentional, but be advised that if these entries are used in your model, the behaviour
+  may be unexpected. 
+All checks on database completed.
+
+> ### Rerun predictions with the new data, and save into a separate matrix
+> predictions_incBeef = apollo_prediction(model_fondecyt, apollo_probabilit .... [TRUNCATED] 
+Running predictions from model using parameter estimates...
+0%....50%....100%
+Aggregated predictions (continuous consumption, discrete choices, and expenditure) at user provided parameters
+                            cont_mean    cont_sd disc_mean disc_sd   expe_mean    expe_sd
+outside                   61076256.44 1189867.12   5601.00    0.00 61076256.44 1189867.12
+RefinedGrains              7155012.75  153910.21   5424.22   13.08 27412883.20  589673.68
+StarchyVegetables          3035854.71  130995.28   3341.44   36.71  5053529.96  218056.74
+Vegetables                 3354442.68  103712.28   4322.70   31.41  9249306.67  285969.01
+Fruits                     3019724.25   95970.88   4067.34   33.37  9495702.26  301786.12
+DairyFoods                  929232.82   30224.03   3984.89   33.91  8967040.36  291660.07
+Beef_and_lamb               188522.93    8622.64   1527.24   33.33  5957924.82  272502.86
+Pork                         96087.21    7951.49   1076.11   29.48  1249133.74  103369.39
+Chicken_and_other_poultry   816028.57   30890.19   3071.62   37.24  6528228.59  247121.52
+Eggs                        662165.00   30884.42   2755.32   37.41  4414433.33  205896.11
+Fish                         66329.96    5918.34    959.50   28.20  1021096.08   91108.12
+Legumes                     382668.85   24681.41   2621.73   37.34  1870485.31  120642.72
+Nuts                         84947.27    7524.99    887.74   27.33  1357734.46  120273.91
+SoyFoods                       109.68     135.27     87.41    9.28     1868.78    2304.82
+meatOther                   206602.78   12487.92   1973.81   35.75  2479233.32  149855.08
+AddedFats                   266202.17   16090.43   2204.30   36.56  1985588.67  120017.74
+AddedSugars                5038341.27  158030.85   4220.48   32.25  9997795.39  313587.35
+
+The output from apollo_prediction is a matrix containing the predictions at the estimated values.
+
+> #colMeans(predictions_incBeef)
+> 
+> # retornar a la data original
+> database$precio_mediana_Beef_and_lamb = 1/2*database$precio_mediana_Beef_and_lam .... [TRUNCATED] 
+
+> # ----------------------------------------------------------------- #
+> #---- switch off writing to file                                 ----
+> # -- .... [TRUNCATED] 
