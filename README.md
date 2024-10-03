@@ -36,9 +36,7 @@ $$
 \end{aligned}
 $$
 
-$$
-\text{Where } V_k^* = (\beta^*)' z_k - \frac{1}{\sigma}\ln\left(\frac{f_k^*}{\gamma_k}+1\right) \text{ and } V_1^* = (\beta^*)' z_1 - \frac{1}{\sigma}\ln(f_1^*) \text{ with } \beta^* = \frac{\beta}{\sigma}. \text{ Note that } \beta \text{ is the parameter's vector for the utility specification in equation 1, and } \beta^* \text{ is for the utility form in equation 8 } (\gamma_k\text{-profile}).
-$$
+Where V_k^*=〖〖(β〗^*)〗^' z_k-1/σ  ln⁡((f_k^*)/γ_k +1) and V_1^*=〖(β^*)〗^' z_1-1/σ  ln⁡(f_1^* ) with β^*=β/σ. Note that β is the parameter's vector for the utility specification in equation 1, and β^* is for the utility form in the third equation(γ_k-profile).
 
 Finally, to forecast the implications of different policy implementations for diet changes, the algorithm proposed by Pinjari and Bhat (2010) will be used. They propose an efficient and computationally fast forecasting algorithm for the MDCEV model. The model predicts the average share of the budget that individuals will devote to each food group in the baseline situation. Once the model parameters are estimated, policy analysis solves the stochastic, constrained, and nonlinear utility maximization problem for each decisionmaker's optimal consumption quantities. The same authors suggest using these predicted values to analyze the model's sensitivity to changes in explanatory variables, representing various policy interventions. Two policy interventions will be assessed. First, a trade and productive intervention decreasing the availability of red and processed meat, and a tax-based instrument, increasing prices for sugar and red and processed meat. The proposed MDCEV model will be estimated using Apollo software (Hess & Palma, 2019).
 
