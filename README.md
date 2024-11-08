@@ -12,7 +12,7 @@ $$
 in which 𝜑 corresponds with the baseline utility and is defined as positive, that is, 𝜑𝑘=exp(𝛽′𝑧𝑘+𝜀𝑘), where 𝛽′𝑧𝑘 indicates the alternative's baseline utility and 𝜀𝑘 is the i.i.d. random disturbance, following a Gumbel (0,𝜎) distribution. The first component of the equation points to the outside good. The marginal rate of substitution between the two alternatives can be expressed by the ratio of their respective baselines utilities. 𝛼𝑘 is a satiation parameter representing the diminishing marginal utility, 𝛾𝑘 is a translation parameter (also involved in the level of satiation) and captures possible corner solutions, and 𝑓𝑘 is the consumption quantity of alternative 𝑘, in this case, the 𝑘 food group of food budget use. Moreover, 𝜑>0,𝛾𝑘>0 and 𝛼𝑘≤1. The individual maximizes this utility subject to a budget constraint:
 
 $$
-\sum_{k=1}^K f_k = F,
+\sum_{k=1}^K f_k* p_k = F,
 $$
 
 where F is the total amount of budget available, which must be equal to the sum of the food budget allocated to each food group. Bhat (2008) proposed normalize α_k=0 for all alternatives to estimate a γ_k profile or normalize γ_k=1 for all alternatives to estimate an α_k-profile. Also, Bhat (2018) demonstrates that it is feasible to estimate σ scale parameter when γ_k-profile is used. Therefore, utility form in (7) is modified to:
