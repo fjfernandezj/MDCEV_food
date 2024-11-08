@@ -17,7 +17,7 @@ apollo_control = list(
   modelName       = "MDCEV_with_outside_good_Proyecto_Alimentacion",
   modelDescr      = "Modelo MDCEV para EPF alpha-gamma profile with outside good and socio-demographics",
   indivID         = "folio", 
-  outputDirectory = "outputs/output_fondecyt_2110_Centro",
+  outputDirectory = "outputs/output_fondecyt_2110_nvaEst_SVSD_Sur",
   mixing          = FALSE 
 )
 
@@ -88,7 +88,8 @@ database <- database %>%
          kcal_0119 = kcal_daily_Others/1000) %>% 
   mutate(gd_total = rowSums(select(.,  gd_0111_2, gd_0112, gd_0113, gd_0114, gd_0115,
                                    gd_0116_1, gd_0116_2, gd_0116_3, gd_0116_4, gd_0116_5, gd_0116_6, gd_0116_7, gd_0116_8, gd_0116_9,
-                                   gd_0117, gd_0118))) 
+                                   gd_0117, gd_0118, gd_0119))) |> 
+  mutate(ingreso = ing_total_hogar/1000)
   
 
 # Usar precio promedio () por categorías; recalcular el gasto y que converse budget con expenditure 
@@ -96,14 +97,14 @@ database <- database %>%
 
 
 # Determinar outside good (cantidad consumida en outside good)
-database$t_outside = database$gd_0119 # outside good: quantity consumed in other foods
+database$t_outside = database$ingreso - database$gd_total # outside good: quantity consumed in other foods
 
 database <- database |> 
   filter(t_outside > 0) |> 
 #  rename(ingreso = prom_ing_total_hogar,
 #         npersonas = prom_npersonas) |> 
-  mutate(budget = gd_total + gd_0119) |> 
-  filter(macrozona == 3)
+  mutate(budget = ingreso) |>  
+  filter(macrozona == 4 )
 #         ingreso = log(ingreso + 1)) |> # transformación logarítmica Variable ingreso 
 #  filter(macrozona == 4)  
 
@@ -131,7 +132,7 @@ apollo_beta = c(alpha_base                       = 0,
                 gamma_meatOther                  = 1,
                 gamma_AddedFats                  = 1,
                 gamma_AddedSugars                = 1,
-#                gamma_Others                     = 1,
+                gamma_Others                     = 1,
 ##Wholegrains
  #               delta_WholeGrains                = 0,
 #               delta_WholeGrains_npersonas      = 0,
@@ -144,151 +145,154 @@ apollo_beta = c(alpha_base                       = 0,
                   delta_RefinedGrains              = 0,
 #                  delta_RefinedGrains_npersonas    = 0,
 #                  delta_RefinedGrains_ingreso    = 0,
-                 delta_RefinedGrains_cse      = 0,
+#                 delta_RefinedGrains_cse      = 0,
 #                 delta_RefinedGrains_age          = 0,
-                 delta_RefinedGrains_edu          = 0,
-                 delta_RefinedGrains_children15       = 0,
+#                 delta_RefinedGrains_edu          = 0,
+#                 delta_RefinedGrains_children15       = 0,
 #                 delta_RefinedGrains_kcal         = 0,
 ##StarchyVegetables
                  delta_StarchyVegetables            = 0,
 #                 delta_StarchyVegetables_npersonas  = 0,
 #                 delta_StarchyVegetables_ingreso  = 0,
-               delta_StarchyVegetables_cse    = 0,
+#               delta_StarchyVegetables_cse    = 0,
 #                delta_StarchyVegetables_age        = 0,
-                delta_StarchyVegetables_edu        = 0,
-                delta_StarchyVegetables_children15     = 0,
+#                delta_StarchyVegetables_edu        = 0,
+#                delta_StarchyVegetables_children15     = 0,
 #                delta_StarchyVegetables_kcal       = 0,
 ##Vegetables
                  delta_Vegetables                   = 0,
 #                 delta_Vegetables_npersonas         = 0,
 #                 delta_Vegetables_ingreso         = 0,
-                delta_Vegetables_cse           = 0,
+#                delta_Vegetables_cse           = 0,
 #                delta_Vegetables_age               = 0,
-                delta_Vegetables_edu               = 0,
-                delta_Vegetables_children15            = 0,
+#                delta_Vegetables_edu               = 0,
+#                delta_Vegetables_children15            = 0,
 #                delta_Vegetables_kcal              = 0,
 ## Fruits
                  delta_Fruits                       = 0,
 #                 delta_Fruits_npersonas             = 0,
 #                 delta_Fruits_ingreso             = 0,
-                 delta_Fruits_cse               = 0,
+#                 delta_Fruits_cse               = 0,
 #                 delta_Fruits_age                   = 0,
-                 delta_Fruits_edu                   = 0,
-                 delta_Fruits_children15                = 0,
+#                 delta_Fruits_edu                   = 0,
+#                 delta_Fruits_children15                = 0,
 #                delta_Fruits_kcal                  = 0,
 ##DairyFoods
                 delta_DairyFoods                    = 0,
 #                delta_DairyFoods_npersonas          = 0,
 #                delta_DairyFoods_ingreso          = 0,
-               delta_DairyFoods_cse            = 0,
+#               delta_DairyFoods_cse            = 0,
 #                delta_DairyFoods_age                = 0,
-                delta_DairyFoods_edu                = 0,
-                delta_DairyFoods_children15             = 0,
+#                delta_DairyFoods_edu                = 0,
+#                delta_DairyFoods_children15             = 0,
 #               delta_DairyFoods_kcal               = 0,
 ##Beef_and_Lamb
                 delta_Beef_and_lamb                 = 0,
 #                delta_Beef_and_lamb_npersonas       = 0,
 #                delta_Beef_and_lamb_ingreso         = 0,
-               delta_Beef_and_lamb_cse         = 0,
+#               delta_Beef_and_lamb_cse         = 0,
 #                delta_Beef_and_lamb_age             = 0,
-                delta_Beef_and_lamb_edu             = 0,
-                delta_Beef_and_lamb_children15          = 0,
+#                delta_Beef_and_lamb_edu             = 0,
+#                delta_Beef_and_lamb_children15          = 0,
 #                delta_Beef_and_lamb_kcal           = 0,
 ##Pork
                 delta_Pork                          = 0,
 #                delta_Pork_npersonas                = 0,
 #                delta_Pork_ingreso                  = 0,
-               delta_Pork_cse                  = 0,
+#               delta_Pork_cse                  = 0,
 #                delta_Pork_age                      = 0,
-                delta_Pork_edu                      = 0,
-                delta_Pork_children15                   = 0,
+#                delta_Pork_edu                      = 0,
+#                delta_Pork_children15                   = 0,
 #                delta_Pork_kcal                    = 0,
 
 ##Chicken_and_poultry
                 delta_Chicken_and_other_poultry             = 0,
 #                delta_Chicken_and_other_poultry_npersonas   = 0,
 #                delta_Chicken_and_other_poultry_ingreso     = 0,
-                delta_Chicken_and_other_poultry_cse     = 0,
+#                delta_Chicken_and_other_poultry_cse     = 0,
 #                delta_Chicken_and_other_poultry_age         = 0,
-                delta_Chicken_and_other_poultry_edu         = 0,
-                delta_Chicken_and_other_poultry_children15      = 0,
+#                delta_Chicken_and_other_poultry_edu         = 0,
+#                delta_Chicken_and_other_poultry_children15      = 0,
 #                delta_Chicken_and_other_poultry_kcal       = 0,
 
 ##Eggs
                 delta_Eggs                      = 0,
 #                delta_Eggs_npersonas            = 0,
 #                delta_Eggs_ingreso              = 0,
-               delta_Eggs_cse              = 0,
+#               delta_Eggs_cse              = 0,
 #                delta_Eggs_age                  = 0,
-                delta_Eggs_edu                  = 0,
-                delta_Eggs_children15               = 0,
+#                delta_Eggs_edu                  = 0,
+#                delta_Eggs_children15               = 0,
 #                delta_Eggs_kcal                = 0,
 
 ##Fish
                 delta_Fish                      = 0,
 #                delta_Fish_npersonas            = 0,
 #                delta_Fish_ingreso            = 0,
-                delta_Fish_cse              = 0,
+#                delta_Fish_cse              = 0,
 #                delta_Fish_age                  = 0,
-                delta_Fish_edu                  = 0,
-                delta_Fish_children15               = 0,
+#                delta_Fish_edu                  = 0,
+#                delta_Fish_children15               = 0,
 #                delta_Fish_kcal                = 0,
 
 ##Legumes
                 delta_Legumes                    = 0,
 #                delta_Legumes_npersonas          = 0,
 #                delta_Legumes_ingreso            = 0,
-               delta_Legumes_cse            = 0,
+#               delta_Legumes_cse            = 0,
 #                delta_Legumes_age                = 0,
-                delta_Legumes_edu                = 0,
-                delta_Legumes_children15             = 0,
+#                delta_Legumes_edu                = 0,
+#                delta_Legumes_children15             = 0,
 #                delta_Legumes_kcal              = 0,
 ##Nuts
                 delta_Nuts                       = 0,
 #                delta_Nuts_npersonas             = 0,
 #                delta_Nuts_ingreso               = 0,
-               delta_Nuts_cse               = 0,
+#               delta_Nuts_cse               = 0,
 #                delta_Nuts_age                   = 0,
-                delta_Nuts_edu                   = 0,
-                delta_Nuts_children15                = 0,
+#                delta_Nuts_edu                   = 0,
+#                delta_Nuts_children15                = 0,
 #                #delta_Nuts_kcal                 = 0,
 ##SoyFoods
                 delta_SoyFoods                   = 0,
 #                delta_SoyFoods_npersonas         = 0,
 #                delta_SoyFoods_ingreso           = 0,
-                delta_SoyFoods_cse           = 0,
+#                delta_SoyFoods_cse           = 0,
 #                delta_SoyFoods_age               = 0,
-                delta_SoyFoods_edu               = 0,
-                delta_SoyFoods_children15            = 0,
+#                delta_SoyFoods_edu               = 0,
+#                delta_SoyFoods_children15            = 0,
 #                delta_SoyFoods_kcal             = 0,
 #meatOther
                 delta_meatOther                  = 0,
 #                delta_meatOther_npersonas        = 0,
 #                delta_meatOther_ingreso          = 0,
-                delta_meatOther_cse          = 0,
+#                delta_meatOther_cse          = 0,
 #                delta_meatOther_age              = 0,
-                delta_meatOther_edu              = 0,
-                delta_meatOther_children15           = 0,
+#                delta_meatOther_edu              = 0,
+#                delta_meatOther_children15           = 0,
 #                delta_meatOther_kcal            = 0,
 ##AddedFats
                 delta_AddedFats                  = 0,
 #                delta_AddedFats_npersonas        = 0,
 #                delta_AddedFats_ingreso          = 0,
-                delta_AddedFats_cse          = 0,
+#                delta_AddedFats_cse          = 0,
 #                delta_AddedFats_age              = 0,
-                delta_AddedFats_edu              = 0,
-                delta_AddedFats_children15           = 0,
+#                delta_AddedFats_edu              = 0,
+#                delta_AddedFats_children15           = 0,
 #                delta_AddedFats_kcal            = 0,
 ##AddedSugars
                 delta_AddedSugars                = 0,
 #                delta_AddedSugars_npersonas      = 0,
 #                delta_AddedSugars_ingreso      = 0,
-                delta_AddedSugars_cse        = 0,
+#                delta_AddedSugars_cse        = 0,
 #                delta_AddedSugars_age            = 0,
-                delta_AddedSugars_edu            = 0,
-                delta_AddedSugars_children15         = 0,
+#                delta_AddedSugars_edu            = 0,
+#                delta_AddedSugars_children15         = 0,
 #                delta_AddedSugars_kcal          = 0,
-#                delta_Others                    = 0,
+                delta_Others                    = 0,
+#                delta_Others_cse                    = 0,
+#                delta_Others_edu                    = 0,
+#                delta_Others_children15             = 0,
                 sig                              = 1)
 
 ### Vector with names (in quotes) of parameters to be kept fixed at their starting value in apollo_beta, use apollo_beta_fixed = c() if none
@@ -331,8 +335,8 @@ apollo_probabilities = function(apollo_beta, apollo_inputs, functionality="estim
                    "SoyFoods",
                    "meatOther",
                    "AddedFats",
-                   "AddedSugars")
-#                   "Others"
+                   "AddedSugars",
+                   "Others")
   
   ### Define availabilities
   avail = list(outside = 1,
@@ -352,8 +356,8 @@ apollo_probabilities = function(apollo_beta, apollo_inputs, functionality="estim
                SoyFoods = 1,
                meatOther = 1,
                AddedFats = 1,
-               AddedSugars = 1)
-#               Others = 1)
+               AddedSugars = 1,
+               Others = 1)
   
   ### Define continuous consumption for individual alternatives
   continuousChoice = list(outside    = t_outside,
@@ -373,8 +377,8 @@ apollo_probabilities = function(apollo_beta, apollo_inputs, functionality="estim
                           SoyFoods = cd_0116_8,
                           meatOther = cd_0116_9,
                           AddedFats = cd_0117,
-                          AddedSugars = cd_0118)
-#                          Others = qd_0119)
+                          AddedSugars = cd_0118,
+                          Others = cd_0119)
                           
    ### Define utilities for individual alternatives
   V = list()
@@ -383,39 +387,39 @@ apollo_probabilities = function(apollo_beta, apollo_inputs, functionality="estim
   
  # V[["WholeGrains"]] = delta_WholeGrains +  delta_WholeGrains_children_0_6 * children_0_6 #+ delta_WholeGrains_cse * quintil + delta_WholeGrains_age * average_age + delta_WholeGrains_edu * educ_promedio + delta_WholeGrains_children_0_6 * precio_por_gr_g_WholeGrains #+ delta_WholeGrains_kcal * kcal_0111_1
     
-  V[["RefinedGrains"]] = delta_RefinedGrains + delta_RefinedGrains_cse * clasf_se +  delta_RefinedGrains_edu * educ_promedio + delta_RefinedGrains_children15 * num_ninos_NoEdad_trabajar #+ delta_RefinedGrains_edu * educ_promedio+ delta_RefinedGrains_ingreso * ingreso #+ delta_RefinedGrains_kcal * kcal_0111_2
+  V[["RefinedGrains"]] = delta_RefinedGrains #+ delta_RefinedGrains_cse * clasf_se +  delta_RefinedGrains_edu * educ_promedio + delta_RefinedGrains_children15 * num_ninos_NoEdad_trabajar #+ delta_RefinedGrains_edu * educ_promedio+ delta_RefinedGrains_ingreso * ingreso #+ delta_RefinedGrains_kcal * kcal_0111_2
   
-  V[["StarchyVegetables"]] = delta_StarchyVegetables + delta_StarchyVegetables_cse * clasf_se +  delta_StarchyVegetables_edu * educ_promedio + delta_StarchyVegetables_children15 * num_ninos_NoEdad_trabajar #+ delta_StarchyVegetables_edu * educ_promedio + delta_StarchyVegetables_ingreso * ingreso #+ delta_StarchyVegetables_kcal * kcal_0112
+  V[["StarchyVegetables"]] = delta_StarchyVegetables #+ delta_StarchyVegetables_cse * clasf_se +  delta_StarchyVegetables_edu * educ_promedio + delta_StarchyVegetables_children15 * num_ninos_NoEdad_trabajar #+ delta_StarchyVegetables_edu * educ_promedio + delta_StarchyVegetables_ingreso * ingreso #+ delta_StarchyVegetables_kcal * kcal_0112
   
-  V[["Vegetables"]] = delta_Vegetables + delta_Vegetables_cse * clasf_se + delta_Vegetables_edu * educ_promedio + delta_Vegetables_children15 * num_ninos_NoEdad_trabajar #+  delta_Vegetables_edu * educ_promedio + delta_Vegetables_ingreso * ingreso #+ delta_Vegetables_kcal * kcal_0113
+  V[["Vegetables"]] = delta_Vegetables #+ delta_Vegetables_cse * clasf_se + delta_Vegetables_edu * educ_promedio + delta_Vegetables_children15 * num_ninos_NoEdad_trabajar #+  delta_Vegetables_edu * educ_promedio + delta_Vegetables_ingreso * ingreso #+ delta_Vegetables_kcal * kcal_0113
   
-  V[["Fruits"]] = delta_Fruits + delta_Fruits_cse * clasf_se + delta_Fruits_edu * educ_promedio + delta_Fruits_children15 * num_ninos_NoEdad_trabajar #+ delta_Fruits_edu * educ_promedio + delta_Fruits_ingreso * ingreso #+ delta_Fruits_kcal * kcal_0114
+  V[["Fruits"]] = delta_Fruits #+ delta_Fruits_cse * clasf_se + delta_Fruits_edu * educ_promedio + delta_Fruits_children15 * num_ninos_NoEdad_trabajar #+ delta_Fruits_edu * educ_promedio + delta_Fruits_ingreso * ingreso #+ delta_Fruits_kcal * kcal_0114
   
-  V[["DairyFoods"]] = delta_DairyFoods + delta_DairyFoods_cse * clasf_se +  delta_DairyFoods_edu * educ_promedio + delta_DairyFoods_children15 * num_ninos_NoEdad_trabajar #+ delta_DairyFoods_edu * educ_promedio+ delta_DairyFoods_ingreso * ingreso #+ delta_DairyFoods_kcal * kcal_0115
+  V[["DairyFoods"]] = delta_DairyFoods #+ delta_DairyFoods_cse * clasf_se +  delta_DairyFoods_edu * educ_promedio + delta_DairyFoods_children15 * num_ninos_NoEdad_trabajar #+ delta_DairyFoods_edu * educ_promedio+ delta_DairyFoods_ingreso * ingreso #+ delta_DairyFoods_kcal * kcal_0115
   
-  V[["Beef_and_lamb"]] = delta_Beef_and_lamb + delta_Beef_and_lamb_cse * clasf_se + delta_Beef_and_lamb_edu * educ_promedio + delta_Beef_and_lamb_children15 * num_ninos_NoEdad_trabajar #+ delta_Beef_and_lamb_edu * educ_promedio + delta_Beef_and_lamb_ingreso * ingreso #+ delta_Beef_and_lamb_kcal * kcal_0116_1
+  V[["Beef_and_lamb"]] = delta_Beef_and_lamb #+ delta_Beef_and_lamb_cse * clasf_se + delta_Beef_and_lamb_edu * educ_promedio + delta_Beef_and_lamb_children15 * num_ninos_NoEdad_trabajar #+ delta_Beef_and_lamb_edu * educ_promedio + delta_Beef_and_lamb_ingreso * ingreso #+ delta_Beef_and_lamb_kcal * kcal_0116_1
   
-  V[["Pork"]] = delta_Pork + delta_Pork_cse * clasf_se  + delta_Pork_edu * educ_promedio + delta_Pork_children15 * num_ninos_NoEdad_trabajar #+ delta_Pork_edu * educ_promedio + delta_Pork_ingreso * ingreso #+ delta_Pork_kcal * kcal_0116_2
+  V[["Pork"]] = delta_Pork #+ delta_Pork_cse * clasf_se  + delta_Pork_edu * educ_promedio + delta_Pork_children15 * num_ninos_NoEdad_trabajar #+ delta_Pork_edu * educ_promedio + delta_Pork_ingreso * ingreso #+ delta_Pork_kcal * kcal_0116_2
   
-  V[["Chicken_and_other_poultry"]] = delta_Chicken_and_other_poultry + delta_Chicken_and_other_poultry_cse * clasf_se + delta_Chicken_and_other_poultry_edu * educ_promedio + delta_Chicken_and_other_poultry_children15 * num_ninos_NoEdad_trabajar #+ delta_Chicken_and_other_poultry_edu * educ_promedio + delta_Chicken_and_other_poultry_ingreso * ingreso  #+ delta_Chicken_and_other_poultry_kcal * kcal_0116_3
+  V[["Chicken_and_other_poultry"]] = delta_Chicken_and_other_poultry #+ delta_Chicken_and_other_poultry_cse * clasf_se + delta_Chicken_and_other_poultry_edu * educ_promedio + delta_Chicken_and_other_poultry_children15 * num_ninos_NoEdad_trabajar #+ delta_Chicken_and_other_poultry_edu * educ_promedio + delta_Chicken_and_other_poultry_ingreso * ingreso  #+ delta_Chicken_and_other_poultry_kcal * kcal_0116_3
   
-  V[["Eggs"]] = delta_Eggs + delta_Eggs_cse * clasf_se +  delta_Eggs_edu * educ_promedio + delta_Eggs_children15 * num_ninos_NoEdad_trabajar #+ delta_Eggs_edu * educ_promedio+ delta_Eggs_ingreso * ingreso  #+ delta_Eggs_kcal * kcal_0116_4
+  V[["Eggs"]] = delta_Eggs #+ delta_Eggs_cse * clasf_se +  delta_Eggs_edu * educ_promedio + delta_Eggs_children15 * num_ninos_NoEdad_trabajar #+ delta_Eggs_edu * educ_promedio+ delta_Eggs_ingreso * ingreso  #+ delta_Eggs_kcal * kcal_0116_4
   
-  V[["Fish"]] = delta_Fish + delta_Fish_cse * clasf_se +  delta_Fish_edu * educ_promedio + delta_Fish_children15 * num_ninos_NoEdad_trabajar #+ delta_Fish_edu * educ_promedio + delta_Fish_ingreso * ingreso #+ delta_Fish_kcal * kcal_0116_5
+  V[["Fish"]] = delta_Fish #+ delta_Fish_cse * clasf_se +  delta_Fish_edu * educ_promedio + delta_Fish_children15 * num_ninos_NoEdad_trabajar #+ delta_Fish_edu * educ_promedio + delta_Fish_ingreso * ingreso #+ delta_Fish_kcal * kcal_0116_5
   
-  V[["Legumes"]] = delta_Legumes  + delta_Legumes_cse * clasf_se +  delta_Legumes_edu * educ_promedio + delta_Legumes_children15 * num_ninos_NoEdad_trabajar #+ delta_Legumes_edu * educ_promedio + delta_Legumes_ingreso * ingreso #+ delta_Legumes_kcal * kcal_0116_6
+  V[["Legumes"]] = delta_Legumes  #+ delta_Legumes_cse * clasf_se +  delta_Legumes_edu * educ_promedio + delta_Legumes_children15 * num_ninos_NoEdad_trabajar #+ delta_Legumes_edu * educ_promedio + delta_Legumes_ingreso * ingreso #+ delta_Legumes_kcal * kcal_0116_6
   #
-  V[["Nuts"]] = delta_Nuts + delta_Nuts_cse * clasf_se + delta_Nuts_edu * educ_promedio + delta_Nuts_children15 * num_ninos_NoEdad_trabajar #+ delta_Nuts_edu * educ_promedio + delta_Nuts_ingreso * ingreso #+ delta_Nuts_kcal * kcal_0116_7
+  V[["Nuts"]] = delta_Nuts #+ delta_Nuts_cse * clasf_se + delta_Nuts_edu * educ_promedio + delta_Nuts_children15 * num_ninos_NoEdad_trabajar #+ delta_Nuts_edu * educ_promedio + delta_Nuts_ingreso * ingreso #+ delta_Nuts_kcal * kcal_0116_7
   
-  V[["SoyFoods"]] = delta_SoyFoods + delta_SoyFoods_cse * clasf_se + delta_SoyFoods_edu * educ_promedio + delta_SoyFoods_children15 * num_ninos_NoEdad_trabajar #+  delta_SoyFoods_edu * educ_promedio + delta_SoyFoods_ingreso * ingreso #  delta_SoyFoods_kcal * kcal_0116_8
+  V[["SoyFoods"]] = delta_SoyFoods #+ delta_SoyFoods_cse * clasf_se + delta_SoyFoods_edu * educ_promedio + delta_SoyFoods_children15 * num_ninos_NoEdad_trabajar #+  delta_SoyFoods_edu * educ_promedio + delta_SoyFoods_ingreso * ingreso #  delta_SoyFoods_kcal * kcal_0116_8
   
-  V[["meatOther"]] = delta_meatOther + delta_meatOther_cse * clasf_se + delta_meatOther_edu * educ_promedio + delta_meatOther_children15 * num_ninos_NoEdad_trabajar #+ delta_meatOther_edu * educ_promedio + delta_meatOther_ingreso * ingreso #+ delta_meatOther_kcal * kcal_0116_9
+  V[["meatOther"]] = delta_meatOther #+ delta_meatOther_cse * clasf_se + delta_meatOther_edu * educ_promedio + delta_meatOther_children15 * num_ninos_NoEdad_trabajar #+ delta_meatOther_edu * educ_promedio + delta_meatOther_ingreso * ingreso #+ delta_meatOther_kcal * kcal_0116_9
   
-  V[["AddedFats"]] = delta_AddedFats + delta_AddedFats_cse * clasf_se + delta_AddedFats_edu * educ_promedio + delta_AddedFats_children15 * num_ninos_NoEdad_trabajar #+ delta_AddedFats_edu * educ_promedio + delta_AddedFats_ingreso * ingreso #+ delta_AddedFats_kcal * kcal_0117
+  V[["AddedFats"]] = delta_AddedFats #+ delta_AddedFats_cse * clasf_se + delta_AddedFats_edu * educ_promedio + delta_AddedFats_children15 * num_ninos_NoEdad_trabajar #+ delta_AddedFats_edu * educ_promedio + delta_AddedFats_ingreso * ingreso #+ delta_AddedFats_kcal * kcal_0117
   
-  V[["AddedSugars"]] = delta_AddedSugars  + delta_AddedSugars_cse * clasf_se + delta_AddedSugars_edu * educ_promedio + delta_AddedSugars_children15 * num_ninos_NoEdad_trabajar #+ delta_AddedSugars_edu * educ_promedio + delta_AddedSugars_ingreso * ingreso #+ delta_AddedSugars_kcal * kcal_0118
+  V[["AddedSugars"]] = delta_AddedSugars  #+ delta_AddedSugars_cse * clasf_se + delta_AddedSugars_edu * educ_promedio + delta_AddedSugars_children15 * num_ninos_NoEdad_trabajar #+ delta_AddedSugars_edu * educ_promedio + delta_AddedSugars_ingreso * ingreso #+ delta_AddedSugars_kcal * kcal_0118
   
-#  V[["Others"]] = delta_Others 
+  V[["Others"]] = delta_Others #+ delta_Others_cse * clasf_se + delta_Others_edu * educ_promedio + delta_Others_children15 *  num_ninos_NoEdad_trabajar
   
   ### Define alpha parameters (No se hicieron cambios en las formulas)
   alpha = list(outside     = alpha_base ,
@@ -435,8 +439,8 @@ apollo_probabilities = function(apollo_beta, apollo_inputs, functionality="estim
                SoyFoods  = alpha_base, 
                meatOther  = alpha_base, 
                AddedFats  = alpha_base, 
-               AddedSugars  = alpha_base)
-#               Others  = alpha_base)
+               AddedSugars  = alpha_base,
+               Others  = alpha_base)
 
   
   ### Define gamma parameters
@@ -456,8 +460,8 @@ apollo_probabilities = function(apollo_beta, apollo_inputs, functionality="estim
                SoyFoods  = gamma_SoyFoods,
                meatOther  = gamma_meatOther,
                AddedFats  = gamma_AddedFats,
-               AddedSugars  = gamma_AddedSugars)
-#               Others  = gamma_Others)
+               AddedSugars  = gamma_AddedSugars,
+               Others  = gamma_Others)
  
   
   ### Define costs for individual alternatives
@@ -478,8 +482,8 @@ apollo_probabilities = function(apollo_beta, apollo_inputs, functionality="estim
               SoyFoods = precio_mediana_SoyFoods/1000,
               meatOther = precio_mediana_meatOther/1000,
               AddedFats = precio_mediana_AddedFats/1000,
-              AddedSugars = precio_mediana_AddedSugars/1000)
-#              Others = 1)
+              AddedSugars = precio_mediana_AddedSugars/1000,
+              Others = precio_mediana_Others/1000)
   
   ### Define settings for MDCEV model (En budget se uso el promedio de ingreso total por hogar)
   mdcev_settings <- list(alternatives      = alternatives,
