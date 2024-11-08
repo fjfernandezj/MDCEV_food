@@ -87,21 +87,24 @@ summary(base_cantidades)
 #############################################################
 ## Características por hogar --> Variables explicativas por hogar para base Apollo
 caracteristicas_por_hogar <- base_personas |> 
-  filter(ing_total_hd > 0) |> 
   select(macrozona, folio, cse, npersonas, edad,mh09, edue, petg,
          ing_total_hogar_hd, ing_total_hog_hd_pc, gastot_hd_pc, gastot_hd) |> 
   group_by(macrozona, folio) |> 
-  summarise(prom_npersonas = mean(npersonas, na.rm = TRUE),
-            prom_ing_total_hogar = mean(ing_total_hogar_hd, na.rm = TRUE),
-            prom_ing_pc = mean(ing_total_hog_hd_pc, na.rm = TRUE),
+  summarise(npersonas = mean(npersonas, na.rm = TRUE),
+            num_ninos_NoEdad_trabajar = sum(petg == 2), # menores de 15 años
+            children_0_6 = sum(edad >= 0 & edad <= 6),
+            children_7_15 = sum(edad >= 7 & edad <= 15),
+            children_15_older = sum(edad > 15 & edad <= 18),
+            ing_total_hogar = mean(ing_total_hogar_hd, na.rm = TRUE),
+            ing_pc = mean(ing_total_hog_hd_pc, na.rm = TRUE),
             clasf_se = mean(cse),
             average_age = round(mean(edad), 0),
             indigena_hogar = ifelse(any(mh09 == 1), 1, 0),
             educ_promedio = mean(edue),
-            ratio_trabajo = sum(petg == 1)/prom_npersonas,
-            prom_gasto_tot_hogar = mean(gastot_hd),
-            prom_gastot_pc = mean(gastot_hd_pc)) |> 
-  mutate(quintil = ntile(prom_ing_pc, 5))
+            ratio_trabajo = sum(petg == 1)/npersonas,
+            gasto_tot_hogar = mean(gastot_hd),
+            gastot_pc = mean(gastot_hd_pc)) |> 
+  mutate(quintil = ntile(ing_total_hogar, 5))
 
 
 #############################################################
@@ -223,7 +226,7 @@ base_datos_apollo <- inner_join(base_datos_gastos_apollo, cantidades_apollo, by 
 
 # Calcular gramos por día por persona para cada categoría de alimentos
 base_datos_apollo <- base_datos_apollo |> 
-  mutate(across(starts_with("c_"), ~ (. / prom_npersonas)/30, .names = "c_daily_{sub('c_', '', col)}"))
+  mutate(across(starts_with("c_"), ~ (. / npersonas)/30, .names = "c_daily_{sub('c_', '', col)}"))
 
 
 # Verifica el resultado
@@ -372,8 +375,8 @@ base_datos_apollo |>
 # Tabla resumen para comprar con Willet et al., (2019)
 tabla_resumen <- base_datos_apollo %>%
   summarise(
-    WholeGrains_g = mean(c_daily_WholeGrains, na.rm = TRUE),
-    WholeGrains_kcal = mean(kcal_daily_WholeGrains, na.rm = TRUE),
+#    WholeGrains_g = mean(c_daily_WholeGrains, na.rm = TRUE),
+#    WholeGrains_kcal = mean(kcal_daily_WholeGrains, na.rm = TRUE),
     
     RefinedGrains_g = mean(c_daily_RefinedGrains, na.rm = TRUE),
     RefinedGrains_kcal = mean(kcal_daily_RefinedGrains, na.rm = TRUE),
@@ -419,7 +422,14 @@ tabla_resumen <- base_datos_apollo %>%
     
     AddedSugars_g = mean(c_daily_AddedSugars, na.rm = TRUE),
     AddedSugars_kcal = mean(kcal_daily_AddedSugars, na.rm = TRUE)
-  )
+  ) |> 
+  mutate(porcentaje_25_refined = 0.25 * RefinedGrains_g,
+         RefinedGrains_g = RefinedGrains_g - porcentaje_25_refined,
+         WholeGrains_g = porcentaje_25_refined,
+         WholeGrains_kcal = WholeGrains_g * 3.3) |> 
+  select(-porcentaje_25_refined) |> 
+  relocate(WholeGrains_g) |> 
+  relocate(WholeGrains_kcal, .after = WholeGrains_g)
 
 # Convertir a una tabla más legible
 tabla_resumen_long <- tibble::tibble(
